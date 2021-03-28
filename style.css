@@ -1,0 +1,13 @@
+.my-header{
+    width: 100%;
+    height: 50%;
+    background-color: olivedrab;
+}
+
+.header-title{
+    display: flex;
+    float: left;
+    font: bold;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+}
