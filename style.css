@@ -17,28 +17,29 @@ body{
 .container{
     position: relative;
     left: 0px;
-    top: 0px;
+    padding-top: 10%;
     right: 0px;
     background: yellowgreen;
     display: flex;
-    flex-direction: column;
-    height: 90%;
+    flex-direction: column; 
+    align-content: space-between;
 }
 
 .cursele-viitoare{
     border: solid;
 }
 
-.header{
-    position: relative;
-    left: 0px;
-    top: 0px;
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 10%;
     width: 100%;
-    background: olivedrab;
+    background-color: gray;
+    color: black;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .header-title{
@@ -48,6 +49,18 @@ body{
     color: white;
     font-size: 30px;
     padding-left: 6px;
+}
+
+.index-header{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background: olivedrab;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .logo-image{
@@ -62,21 +75,34 @@ body{
 .main{
     background-color: ivory;
     padding-bottom: 22px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
 }
 
 .main-title{
     text-align: center;
 }
 
-.footer {
-    position: relative;
-    left: 0;
-    bottom: 0;
-    height: 10%;
+.register-header{
+    position: fixed;
+    left: 0px;
+    top: 0px;
     width: 100%;
-    background-color: gray;
-    color: black;
+    background: olivedrab;
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.registry-form{
+    border: black;
+    border: solid;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
