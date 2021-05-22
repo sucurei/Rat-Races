@@ -4,9 +4,9 @@
     justify-content: center;
 }
 
-.login-container{
+.register-container{
     display: grid;
-    grid-template-rows: 25% 50% 25%;
+    grid-template-rows: 20% 60% 20%;
     background-color: #e5e5e5;
     border-radius: 3em;
     width: 30%;
@@ -22,7 +22,7 @@
 
 .inputs{
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 25% 25% 25% 25%;
 }
 
 .input{

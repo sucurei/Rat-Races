@@ -1,50 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-        <title>Index</title>
-    </head>
-    <body>
-        <div class="container">
-            <div class="index-header">
-                <img src="rats_race.jpg" alt="logo" class="logo-image">
-                <h1 class="header-title">
-                    Rats Race
-                </h1>
-                <div>
-                    <button class="button" onclick="document.location='login.html'">
-                        Logare
-                    </button>
-                    <button class="button" onclick="document.location='register.html'">
-                        Inregistrare
-                    </button>
-                </div>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <div class="login-container">
+            <div class="title">
+                Login
             </div>
-            <br>
-            <div class="main">
-                <h4 class="main-title">
-                    Cursele Viitoare
-                </h4>
-                <div class="cursele-viitoare">
-                    Aici se va afisa o lista cu viitoarele pariuri
-                </div>
+            <div class="inputs">
+                <input type="text" class="input" placeholder="username">
+                <input type="password" class="input" placeholder="password">
             </div>
-            <br>
-            <div class="main">
-                <h4 class="main-title">
-                    Cursele Finalizate
-                </h4>
-                <div class="cursele-viitoare">
-                    Aici se va afisa o lista cu pariurile finalizate
-                </div>
+            <div class="buttons">
+                <a href="races.html">
+                    <button type="button" class="btn">
+                        Log In
+                    </button>
+                </a>
+                <a href="signup.html">
+                    <button type="button" class="btn">
+                        Register
+                    </button>
+                </a>
             </div>
         </div>
-        <div class = "footer">
-            <p>Proiect realizat de Iordache Daniel si Sucurei Robert.</p>
-            <p onclick="document.location='documentatie.html'"> Documentatie Aplicatie Web </p>
-        </div>
-    </body>
+    </div>
+</body>
 </html>
