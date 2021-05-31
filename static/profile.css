@@ -1,0 +1,142 @@
+body{
+    margin: 0em;
+    overflow-x: hidden;
+}
+
+.page{
+    height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 12% 78% 10%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.header{
+    background: #1abc9c;
+    color: white;
+    font-size: 2em;
+    display: grid;
+    grid-template-columns: 70% 30%;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 50% 50%;
+}
+
+.race{
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    /*border: none;*/
+    border-width: 3px;
+    border-color: black;
+    border-radius: 2em;
+    padding: 2em;
+    width: 90%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.footer{
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rectangle{
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar{
+    width: 0.5em;
+}
+
+::-webkit-scrollbar-track{
+    background:wheat;
+}
+
+::-webkit-scrollbar-thumb{
+    background: gray;
+}
+
+.name{
+    font-size: 2em;
+    text-align: center;
+}
+
+.date{
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.nr-of-shobo{
+    font-size: 2em;
+    color:gray;
+    text-align: center;
+}
+
+.btn{
+    background-color: green;
+    color: #ffff;
+    border-radius: 1em;
+    border: none;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    width: 10em;
+    height: 100%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 2em;
+}
+
+.logo{
+    margin: 0.45em;
+    width: 6%;
+    height: auto;
+}
+
+a{
+    text-decoration: none;
+}
+
+.links{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:0.5em;
+}
+
+.profile{
+    display:grid;
+    grid-template-columns: 33% 67%;
+}
+
+.icon{
+    width: 50%;
+    height: auto;
+}
+.picture{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p{
+    font-size: 1.5em;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}

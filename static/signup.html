@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="signup.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="register-container">
+      <div class="title">Register</div>
+      <form class="inputs" action="http://localhost:5000/signup" method="POST">
+        <input type="text" class="input" placeholder="username" id="name" name="name"/>
+        <input type="text" class="input" placeholder="email" id="email" name="email"/>
+        <input type="password" class="input" placeholder="password" id="password" name="password"/>
+        <input type="password" class="input" placeholder="confirm password" id="cpasswrd" name="cpassword"/>
+        <div class="buttons">
+          <button type="submit" class="btn">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
