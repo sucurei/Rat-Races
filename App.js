@@ -26,6 +26,7 @@ async function servestatic(req,res){
         }
 
         res.writeHead(200, header)
+        console.log(data)
         res.end(data)
         return;
     });

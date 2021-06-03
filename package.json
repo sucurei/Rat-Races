@@ -1,0 +1,10 @@
+{
+  "name": "proiect-tw-main",
+  "version": "1.0.0",
+  "dependencies": {
+    "mongoose": "^5.12.12"
+  },
+  "devDependencies": {
+    "jsonwebtoken": "^8.5.1"
+  }
+}

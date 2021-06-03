@@ -1,7 +1,8 @@
-function formdata()
+function getToken(tokenObj)
 {
-    var username= document.getElementById("username").value;
-    var password= document.getElementById("password").value;
-    console.log(username);
-    console.log(password);
+    localStorage.setItem('authToken', JSON.stringify(tokenObj))
 }
+
+fetch('/login').then(
+     response => response.json()
+).then(json => getToken(json))

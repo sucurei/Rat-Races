@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://123:123@cluster0.ru79j.mongodb.net/db?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true});
 const App = require('./App')
+const JWTHelper = require('./JWTHelper')
 const RequestBody = require('./RequestBody')
 const User = require('./schemas/userschema')
 const PORT = 5000
@@ -10,18 +11,21 @@ const JSONheader = {'Content-Type': 'application/json; charset=UTF-8', 'Access-C
 const app = new App(5000)
 
 app.get('/users', async (req, res) => {
-    // TODO verific daca am QS
-    // ?username=:name&password=:pass
     res.writeHead(200, JSONheader)
 
 
     let extractedParams = new RequestBody(req)
     await User.find({ name : extractedParams.qsParams["name"] })
         .lean().exec(function (err, users) {
-            if (err != null && users != undefined)
+            if (err === null && users !== undefined)
             {
                 console.log(users)
-                res.end(JSON.stringify(users));
+                if (JWTHelper.MiddlewareAuthTokenValidation(req, res)) {
+                    let authTokenPayload = JWTHelper.GetAuthTokenPayload(req)
+                    if (authTokenPayload["name"] === extractedParams.qsParams["name"]) {
+                        res.write(JSON.stringify(users))
+                    }
+                }
             }
             else
             {
@@ -32,13 +36,13 @@ app.get('/users', async (req, res) => {
 })
 
 app.post('/signup', (req,res) => {
-    let cacat = "";
+    let bodyFormat = "";
     req.on("data",(data) => {
-        cacat += data;
+        bodyFormat += data;
     })
 
     req.on("end", async () => {
-        req.body = cacat
+        req.body = bodyFormat
 
         let extractedParams = (new RequestBody(req)).formData
         res.writeHead(200, JSONheader)
@@ -54,10 +58,35 @@ app.post('/signup', (req,res) => {
     })
 })
 
-app.post('/otherroute', (req, res) => {
-    res.writeHead(200, JSONheader)
-    res.write('hello from other route')
-    res.end()
+app.post('/login', (req, res) => {
+    let bodyFormat = "";
+    req.on("data",(data) => {
+        bodyFormat += data;
+    })
+
+    req.on("end", async () => {
+        req.body = bodyFormat
+
+        let extractedParams = (new RequestBody(req)).formData
+        res.writeHead(200, JSONheader)
+
+        await User.find({ name : extractedParams["name"], password : extractedParams["password"] })
+            .lean().exec(function (err, users) {
+                if (err === null && users !== undefined)
+                {
+                    console.log(users)
+                    let authJWT = JWTHelper.GetTokenFromPayload({ name : extractedParams["name"] } , 60 * 60 * 10)
+                    console.log(authJWT)
+                    console.log(JWTHelper.GetPayloadFromToken(authJWT))
+                    res.end(JSON.stringify(authJWT));
+                }
+                else
+                {
+                    console.log(extractedParams.qsParams);
+                    res.end('');
+                }
+            })
+    })
 })
 
 app.startServer(() => {

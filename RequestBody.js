@@ -35,7 +35,7 @@ class RequestBody {
 
         this.qsParams = querystring.parse(req.url.query)
         
-        if (req.body != undefined)
+        if (req.body !== undefined)
             this.formData = querystring.parse(req.body)
 
         //
