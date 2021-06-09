@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://123:123@cluster0.ru79j.mongodb.net/db?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true});
+
 const App = require('./App')
 const JWTHelper = require('./JWTHelper')
 const RequestBody = require('./RequestBody')
+
 const User = require('./schemas/userschema')
+const Race = require('./schemas/raceschema')
+const Rat = require('./schemas/ratschema')
+const Bet = require('./schemas/betschema')
 const PORT = 5000
 
 const JSONheader = {'Content-Type': 'application/json; charset=UTF-8', 'Access-Control-Allow-Origin': '*'}
@@ -12,7 +17,6 @@ const app = new App(5000)
 
 app.get('/users', async (req, res) => {
     res.writeHead(200, JSONheader)
-
 
     let extractedParams = new RequestBody(req)
     await User.find({ name : extractedParams.qsParams["name"] })
@@ -23,7 +27,7 @@ app.get('/users', async (req, res) => {
                 if (JWTHelper.MiddlewareAuthTokenValidation(req, res)) {
                     let authTokenPayload = JWTHelper.GetAuthTokenPayload(req)
                     if (authTokenPayload["name"] === extractedParams.qsParams["name"]) {
-                        res.write(JSON.stringify(users))
+                        res.end(JSON.stringify(users))
                     }
                 }
             }
@@ -48,11 +52,18 @@ app.post('/signup', (req,res) => {
         res.writeHead(200, JSONheader)
         res.write('merge :D')
 
-        const user = new User({ name: extractedParams.name, password: extractedParams.password, email: extractedParams.email, balanta:1000 });
+        let usersList = await User.find({ name : extractedParams["name"] }).lean().exec()
+
+        if (usersList.length) {
+            res.end("Username deja folosit")
+            return
+        }
+
+        const user = new User({ name: extractedParams["name"], password: extractedParams["password"], email: extractedParams["email"], balanta : 1000 });
         user.save(function (err, fluffy) {
-            if (err) 
+            if (err)
                 return console.error(err);
-            
+
         });
         res.end()
     })
@@ -86,6 +97,169 @@ app.post('/login', (req, res) => {
                     res.end('');
                 }
             })
+    })
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////    RATS
+
+app.post('/addRat', (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    const newRat = new Rat( { name : extractedParams.qsParams["name"], wins : 0, races : 0 })
+
+    newRat.save(function (err, fluffy) {
+        if (err)
+            return console.error(err);
+    });
+
+    console.log(JSON.stringify(newRat))
+
+    res.end(JSON.stringify(newRat))
+})
+
+app.post('/allRats', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    await Rat.find().lean().exec(function (err, rats) {
+        res.end(JSON.stringify(rats))
+    })
+})
+
+app.post('/ratProfile', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    await Rat.find({ name : extractedParams.qsParams["name"] }).lean().exec(function (err, rat) {
+        res.write(JSON.stringify(rat))
+    })
+
+    await Race.find({ rats : { $elemMatch : { name : extractedParams.qsParams["name"] } } }).lean().exec(function (err, races) {
+        res.end(JSON.stringify(races))
+    })
+})
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////   RACES
+
+
+app.post('/addRace', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    console.log(extractedParams)
+    console.log(extractedParams.qsParams["date"].split('/')[0])
+
+    let newDate = {
+        day : Number(extractedParams.qsParams["date"].split('/')[0]),
+        month : Number(extractedParams.qsParams["date"].split('/')[1]),
+        year : Number(extractedParams.qsParams["date"].split('/')[2]),
+    }
+
+    let newTime = {
+        hour : Number(extractedParams.qsParams["time"].split(':')[0]),
+        minutes : Number(extractedParams.qsParams["time"].split(':')[1])
+    }
+
+    let ratsList = []
+
+    let rats = await Rat.find().lean().exec()
+
+    let i = 0
+
+    while (i < 6) {
+        let index = Math.floor(Math.random() * rats.length)
+        if (!ratsList.includes(rats[index].name)) {
+            i++;
+            ratsList.push(rats[index].name)
+        }
+    }
+
+    console.log(JSON.stringify(ratsList))
+
+    const newRace = new Race({name : extractedParams.qsParams["name"], date : newDate, time : newTime, rats : ratsList, finished : 0 })
+
+    newRace.save(function (err, fluffy) {
+        if (err)
+            return console.error(err);
+    });
+
+    res.end(JSON.stringify(newRace))
+})
+
+app.get('/allRaces', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    await Race.find().lean().exec(function (err, races) {
+        res.end(JSON.stringify(races))
+    })
+})
+
+app.get('/races', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let currentD = new Date()
+    let currentDate = {
+        day : currentD.getDate(),
+        month : currentD.getMonth() + 1,
+        year : currentD.getFullYear()
+    }
+
+    let currentTime = {
+        hour : currentD.getHours(),
+        minutes : currentD.getMinutes()
+    }
+
+    await Race.find({ date : currentDate }).lean().exec(function (err, races) {
+        console.log(':)')
+        console.log(currentDate)
+        res.end(JSON.stringify(races))
+    })
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////   BETS
+
+app.post('/addBet', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    if (!JWTHelper.MiddlewareAuthTokenValidation(req, res)) {
+        res.end("Nu esti logat")
+        return
+    }
+
+    let authTokenPayload = JWTHelper.GetAuthTokenPayload(req)
+
+    let user = (await User.find({ name : authTokenPayload["name"] }).lean().exec())[0]
+
+    let newBet = new Bet({ userId : user["_id"], raceId : extractedParams.qsParams["raceId"], ratId : extractedParams.qsParams["ratId"], betSize : extractedParams.qsParams["betSize"] })
+
+    newBet.save(function (err, fluffy) {
+        if (err)
+            return console.error(err);
+    });
+
+    console.log(user)
+
+    user["balanta"] -= Number(extractedParams.qsParams["betSize"])
+
+    User.updateOne({ _id : user["_id"] }, { balanta : user["balanta"] }, function (err, fluffy) {
+        if (err)
+            return console.error(err);
+    })
+
+    res.end(JSON.stringify(newBet))
+})
+
+app.get('/allBets', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    await Bet.find().lean().exec(function (err, bets) {
+        res.end(JSON.stringify(bets))
     })
 })
 

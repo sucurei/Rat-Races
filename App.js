@@ -2,6 +2,11 @@ const http = require('http')
 const url = require('url')
 const fs = require('fs')
 
+const User = require('./schemas/userschema')
+const Race = require('./schemas/raceschema')
+const Rat = require('./schemas/ratschema')
+const Bet = require('./schemas/betschema')
+
 
 async function servestatic(req,res){
     req.url = url.parse(req.url)
@@ -69,6 +74,53 @@ class App {
 
             return action ? action.action : null
         }
+
+        this.checkRaces = async () => {
+            let currentDate = new Date()
+
+            let unfinishedRaces = await Race.find({finished: 0}).lean().exec()
+            for (const race of unfinishedRaces) {
+                if (!((race["date"]["month"] <= currentDate.getMonth() + 1 && race["date"]["year"] <= currentDate.getFullYear()) &&
+                    (race["date"]["day"] < currentDate.getDate()) ||
+                    (race["date"]["day"] === currentDate.getDate() && (race["time"]["hour"] < currentDate.getHours() ||
+                                                                       race["time"]["hour"] === currentDate.getHours() && race["time"]["minutes"] < currentDate.getMinutes())))) {
+
+                    console.log("Cursele sunt up-to-date")
+                    continue;
+                }
+
+                let winnerName = race["rats"][Math.floor(Math.random() * 6)]
+
+                let winnerRat = (await Rat.find({ name : winnerName }).lean().exec())[0]
+
+                for (const ratName of race["rats"]) {
+                    let result = (ratName === winnerName) ? 1 : 0
+
+                    let rat = (await Rat.find({ name : ratName }).lean().exec())[0]
+
+                    Rat.updateOne({ name : ratName }, { wins : rat["wins"] +
+                            result, races : rat["races"] + 1}, function (err, fluffy) {
+                        if (err)
+                            return console.error(err);
+                    })
+                }
+
+                let winBets = await Bet.find({ ratId : winnerRat["_id"]}).lean().exec()
+
+                for (const bet of winBets) {
+                    await User.find({ _id : bet["userId"] }).lean().exec(function (err, user) {
+                        console.log(bet["betSize"])
+                        console.log(user[0]["balanta"])
+                        User.updateOne({ _id : user[0]["_id"] }, { balanta : user[0]["balanta"] + bet["betSize"] * 6 }, function (err, fluffy) {
+                            if (err)
+                                return console.error(err);
+                        })
+                    })
+                }
+            }
+        }
+
+
         this.server = http.createServer(async (req, res) => {
             let actionKey = this.getActionKey(req)
 
@@ -77,6 +129,10 @@ class App {
                 res.end(JSON.stringify({'error' : `HTTP method ${actionKey.method} not supported`}))
                 return
             }
+
+            ////////////   check all races
+
+            await this.checkRaces()
 
             let action = this.getAction(actionKey)   // action = lambda
             if (action != null)
