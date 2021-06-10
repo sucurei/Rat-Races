@@ -43,9 +43,9 @@ class JWTHelper {
      * @return {boolean} True if JWT Auth Token is present and valid, false otherwise
      */
     static MiddlewareAuthTokenValidation(req, res) {
-        let token = req.headers['x-access-token'];
+        let token = req.headers['x-auth-token'] || req.headers['cookie'].split("=")[1];
         if (!token) {
-            res.end('NU exista token')
+            res.end('logheazate saracu-le')
             return false
         }
         if (false === JWTHelper.IsValidToken(token)) {
@@ -55,7 +55,7 @@ class JWTHelper {
         return true
     }
     static GetAuthTokenPayload(req) {
-        let token = req.headers['x-access-token'];
+        let token = req.headers['x-auth-token'];
         return JWTHelper.GetPayloadFromToken(token);
     }
 }

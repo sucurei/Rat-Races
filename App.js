@@ -7,6 +7,8 @@ const Race = require('./schemas/raceschema')
 const Rat = require('./schemas/ratschema')
 const Bet = require('./schemas/betschema')
 
+const JWTHelper = require('./JWTHelper')
+
 
 async function servestatic(req,res){
     req.url = url.parse(req.url)
@@ -23,18 +25,21 @@ async function servestatic(req,res){
         header = JPGheader
     if (type === 'png')
         header = PNGheader
-    fs.readFile('static' + filename, {}, (error, data) => {
-        if (error != null) {
-            res.writeHead(404, JSONheader)
-            res.end(JSON.stringify({'error' : `Action not found`}))
-            return;
-        }
 
-        res.writeHead(200, header)
-        console.log(data)
-        res.end(data)
-        return;
-    });
+    if ((type == "html" && filename != "/index.html" && filename != "/signup.html" && filename != "/races.html" && JWTHelper.MiddlewareAuthTokenValidation(req, res)) 
+        || (filename == "/index.html" || filename == "/signup.html" || filename == "/races.html" || type != "html")) {
+        fs.readFile('static' + filename, {}, (error, data) => {
+            if (error != null) {
+                res.writeHead(404, JSONheader)
+                res.end(JSON.stringify({'error' : `Action not found`}))
+                return;
+            }
+    
+            res.writeHead(200, header)        
+            res.end(data)
+            return;
+        });
+    }
 }
 
 const JSONheader = {'Content-Type': 'application/json; charset=UTF-8'}
@@ -86,7 +91,7 @@ class App {
                                                                        race["time"]["hour"] === currentDate.getHours() && race["time"]["minutes"] < currentDate.getMinutes())))) {
 
                     console.log("Cursele sunt up-to-date")
-                    continue;
+                    return;
                 }
 
                 let winnerName = race["rats"][Math.floor(Math.random() * 6)]
@@ -117,6 +122,11 @@ class App {
                         })
                     })
                 }
+
+                Race.updateOne({ _id : race["_id"] }, { finished : 1 }, function (err, fluffy) {
+                    if (err)
+                        return console.error(err);
+                })
             }
         }
 

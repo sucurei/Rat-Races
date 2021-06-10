@@ -18,22 +18,18 @@ const app = new App(5000)
 app.get('/users', async (req, res) => {
     res.writeHead(200, JSONheader)
 
-    let extractedParams = new RequestBody(req)
-    await User.find({ name : extractedParams.qsParams["name"] })
+    await User.find({ name : JWTHelper.GetAuthTokenPayload(req)["name"] })
         .lean().exec(function (err, users) {
             if (err === null && users !== undefined)
             {
                 console.log(users)
-                if (JWTHelper.MiddlewareAuthTokenValidation(req, res)) {
-                    let authTokenPayload = JWTHelper.GetAuthTokenPayload(req)
-                    if (authTokenPayload["name"] === extractedParams.qsParams["name"]) {
-                        res.end(JSON.stringify(users))
-                    }
+                console.log(req.headers)
+                if (JWTHelper.MiddlewareAuthTokenValidation(req, res)) {                    
+                    res.end(JSON.stringify(users))
                 }
             }
             else
             {
-                console.log(extractedParams.qsParams);
                 res.end('');
             }
     })
@@ -49,22 +45,29 @@ app.post('/signup', (req,res) => {
         req.body = bodyFormat
 
         let extractedParams = (new RequestBody(req)).formData
-        res.writeHead(200, JSONheader)
-        res.write('merge :D')
-
+        
         let usersList = await User.find({ name : extractedParams["name"] }).lean().exec()
-
+        
         if (usersList.length) {
+            res.writeHead(200, JSONheader)
             res.end("Username deja folosit")
             return
         }
 
         const user = new User({ name: extractedParams["name"], password: extractedParams["password"], email: extractedParams["email"], balanta : 1000 });
         user.save(function (err, fluffy) {
-            if (err)
-                return console.error(err);
+            if (err){
+                res.writeHead(200, JSONheader)
+                console.error(err);
+                res.end(err);
+            }
 
         });
+        let authJWT = JWTHelper.GetTokenFromPayload({ name : extractedParams["name"] } , 60 * 60 * 10)
+        res.writeHead(302, {
+            "Location": "/races.html",
+            "Set-Cookie" : "token=" + authJWT + "; Path=/"
+        })
         res.end()
     })
 })
@@ -79,7 +82,6 @@ app.post('/login', (req, res) => {
         req.body = bodyFormat
 
         let extractedParams = (new RequestBody(req)).formData
-        res.writeHead(200, JSONheader)
 
         await User.find({ name : extractedParams["name"], password : extractedParams["password"] })
             .lean().exec(function (err, users) {
@@ -89,7 +91,11 @@ app.post('/login', (req, res) => {
                     let authJWT = JWTHelper.GetTokenFromPayload({ name : extractedParams["name"] } , 60 * 60 * 10)
                     console.log(authJWT)
                     console.log(JWTHelper.GetPayloadFromToken(authJWT))
-                    res.end(JSON.stringify(authJWT));
+                    res.writeHead(302, {
+                        "Location" : "/races.html",
+                        "Set-Cookie" : "token=" + authJWT + "; Path=/"
+                    })
+                    res.end();
                 }
                 else
                 {
@@ -119,7 +125,7 @@ app.post('/addRat', (req, res) => {
     res.end(JSON.stringify(newRat))
 })
 
-app.post('/allRats', async (req, res) => {
+app.get('/allRats', async (req, res) => {
     res.writeHead(200, JSONheader)
 
     await Rat.find().lean().exec(function (err, rats) {
@@ -127,16 +133,30 @@ app.post('/allRats', async (req, res) => {
     })
 })
 
-app.post('/ratProfile', async (req, res) => {
+app.get('/ratProfile', async (req, res) => {
     res.writeHead(200, JSONheader)
 
     let extractedParams = new RequestBody(req)
 
     await Rat.find({ name : extractedParams.qsParams["name"] }).lean().exec(function (err, rat) {
-        res.write(JSON.stringify(rat))
+        res.end(JSON.stringify(rat))
     })
 
-    await Race.find({ rats : { $elemMatch : { name : extractedParams.qsParams["name"] } } }).lean().exec(function (err, races) {
+    // await Race.find({ rats : { $elemMatch : { name : extractedParams.qsParams["name"] } } }).lean().exec(function (err, races) {
+    //     res.end(JSON.stringify(races))
+    // })
+})
+
+app.get('/ratraces', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    // await Rat.find({ name : extractedParams.qsParams["name"] }).lean().exec(function (err, rat) {
+    //     res.end(JSON.stringify(rat))
+    // })
+
+    await Race.find({ rats : extractedParams.qsParams["name"]}).lean().exec(function (err, races) {        
         res.end(JSON.stringify(races))
     })
 })
@@ -236,7 +256,7 @@ app.post('/addBet', async (req, res) => {
 
     let user = (await User.find({ name : authTokenPayload["name"] }).lean().exec())[0]
 
-    let newBet = new Bet({ userId : user["_id"], raceId : extractedParams.qsParams["raceId"], ratId : extractedParams.qsParams["ratId"], betSize : extractedParams.qsParams["betSize"] })
+    let newBet = new Bet({ userId : user["_id"], raceName : extractedParams.qsParams["raceName"], ratName : extractedParams.qsParams["ratName"], betSize : extractedParams.qsParams["betSize"] })
 
     newBet.save(function (err, fluffy) {
         if (err)
@@ -261,6 +281,27 @@ app.get('/allBets', async (req, res) => {
     await Bet.find().lean().exec(function (err, bets) {
         res.end(JSON.stringify(bets))
     })
+})
+
+app.get('/userbets', async (req, res) => {
+    res.writeHead(200, JSONheader)
+
+    let extractedParams = new RequestBody(req)
+
+    const user_id = extractedParams.qsParams["id"]
+
+    await Bet.find({userId: user_id}).lean().exec(function (err, bets) {
+        res.end(JSON.stringify(bets))
+    })
+})
+
+app.get('/logout', async (req, res) => {
+    res.writeHead(302, {
+        "Location": "/index.html",
+        "Set-Cookie" : "token=; Path=/"
+    })
+
+    res.end()
 })
 
 app.startServer(() => {

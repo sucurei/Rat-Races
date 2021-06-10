@@ -5,9 +5,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="betting.css">
+        <script src="betting.js"></script>
         <title>Document</title>
     </head>
-    <body>
+    <body onload="showRats()">
         <div class="page">
             <div class="header">
                 <img src="assets/rat.png" class="logo">
@@ -15,60 +16,58 @@
                     <a href="profile.html">
                         Profil
                     </a>
-                    <a href="rats.html">
+                    <a href="shobolist.html">
                         Sobolan
                     </a>
-                    <a href="index.html">
+                    <a href="logout">
                         Log Out
                     </a>
                 </div>
             </div>
             <div class="content">
                 <div class="title">
-                    <div>
-                        Pariaza la cursa 47 
+                    <div id="raceName">                         
                     </div>
-                    <div>
-                        13-05-2021 ora 15:00
+                    <div id="dateAndOra">                        
                     </div>
                 </div>
-                <div class="tiles">
+                <div class="tiles" id="rats">
                     <div class="col">
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
-                        <div class="row">
+                        <div class="row" onclick="chooseRat(this)">
                             shobo 21
                         </div>
                     </div>
                 </div>
                 <div class="money">
                     <div class="input-box">
-                        <input type="text" class="input" placeholder="Introdu Suma">
+                        <input onchange="calcCastigPosibil()" id="suma" type="text" class="input" placeholder="Introdu Suma">
                     </div>
                     <div class="output-box">
-                        <div class="output">
+                        <div class="output" id="poswin">
                             Castig Posibil
                         </div>
                     </div>
                     <div class="button-box">
-                        <button type="button" class="btn">
+                        <button type="button" class="btn" onclick="bet()">
                             Pariaza
                         </button>
                     </div>

@@ -2,8 +2,8 @@ const mongoose = require ("mongoose")
 
 const betschema = new mongoose.Schema({
     userId : String,
-    raceId : String,
-    ratId : String,
+    raceName : String,
+    ratName : String,
     betSize : Number
 })
 
