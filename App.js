@@ -7,7 +7,7 @@ const Race = require('./schemas/raceschema')
 const Rat = require('./schemas/ratschema')
 const Bet = require('./schemas/betschema')
 
-const JWTHelper = require('./JWTHelper')
+const JWTController = require('./JWTController')
 
 
 async function servestatic(req,res){
@@ -26,7 +26,7 @@ async function servestatic(req,res){
     if (type === 'png')
         header = PNGheader
 
-    if ((type == "html" && filename != "/index.html" && filename != "/signup.html" && filename != "/races.html" && JWTHelper.MiddlewareAuthTokenValidation(req, res)) 
+    if ((type == "html" && filename != "/index.html" && filename != "/signup.html" && filename != "/races.html" && JWTController.authTokenValid(req, res)) 
         || (filename == "/index.html" || filename == "/signup.html" || filename == "/races.html" || type != "html")) {
         fs.readFile('static' + filename, {}, (error, data) => {
             if (error != null) {
