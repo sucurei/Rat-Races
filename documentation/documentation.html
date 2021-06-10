@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Universal Storage Tool">
+    <meta name="author" content="Sucurei Roert - Pavel, Iordache Dan Adrian">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentatie BetR!</title>
+</head>
+
+<body>
+    <header>
+        <h1>DOCUMENTATIE BetR!</h1><br>
+    </header>
+    <div role="contentinfo" style="font-size:1vw">
+        <section typeof="sa:AuthorsList">
+            <h2>AUTORI</h2>
+            <ul>
+                <li typeof="sa:ContributorRole" property="schema:author">
+                    <span typeof="schema:Person">
+                        <meta property="schema:givenName" content="Robert - Pavel">
+                        <meta property="schema:additionalName" content="L.">
+                        <meta property="schema:familyName" content="Sucurei">
+                        <span property="schema:name">Sucurei L. Robert - Pavel</span>
+                    </span>
+                    <ul>
+                        <li property="schema:roleContactPoint" typeof="schema:ContactPoint">
+                            <a href="mailto:robertsucurei37@gmail.com" property="schema:email">robertsucurei37@gmail.com</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li typeof="sa:ContributorRole" property="schema:author">
+                    <span typeof="schema:Person">
+                        <meta property="schema:givenName" content="Dan Adrian">
+                        <meta property="schema:additionalName" content="G.">
+                        <meta property="schema:familyName" content="Iordache">
+                        <span property="schema:name">Iordache G. Dan Adrian</span>
+                    </span>
+                    <ul>
+                        <li property="schema:roleContactPoint" typeof="schema:ContactPoint">
+                            <a href="mailto:pn_rider@yahoo.com" property="schema:email">pn_rider@yahoo.com</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <ol role="directory">
+                <li><a href="#documentation"><span>1.</span>Descrierea proiectului</a>
+                <li><a href="#doc-front"><span>2. </span>Documentare front-end</a></li>
+                    <ol role="directory">
+                        
+                        <li><a href="#pages"><span>1.1. </span>Paginile proiectului</a></li>
+                        <li>
+                            <ol role="directory">
+                                <li><a href="#login-front"><span>1.1.1. </span>Login page</a></li>
+                                <li><a href="#sign-up"><span>1.1.2. </span>Sign Up page</a></li>
+                                <li><a href="#races"><span>1.1.3. </span>Races page</a></li>
+                                <li><a href="#betting"><span>1.1.4. </span>Betting page</a></li>
+                                <li><a href="#profile"><span>1.1.5. </span>Profile page</a></li>
+                                <li><a href="#shobo-list"><span>1.1.6. </span>Shobo List</a></li>
+                            </ol>
+                        </li>
+                        <li><a href="#header"><span>1.2. </span>Headerul</a></li>
+                    </ol>
+                
+                <li><a href="#doc-back"><span>3. </span>Documentare back-end</a></li>
+                <ol role="directory">
+                    <li><a href="#arhitectura"><span>3.1. </span>Arhitectura generala</a></li>
+                            <li>
+                            <ol role="directory">
+                                <li><a href="#router"><span>3.1.1. </span>Login si Sign-Up</a></li>
+                                <li><a href="#login-back"><span>3.1.3. </span>Baza de Date</a></li>
+                            </ol>
+                        </ol>
+                
+                
+        </section>
+        <section >
+            <h2 id="documentation">Introducere in site</h2>
+            <h2 id="doc-front">Front-endul</h2>
+            <pre>
+                BetR! (Bet on Rats) reprezinta o aplicatie Web ce permite utilizatorilor autentificati sa plaseze pariuri pe curse de sobolani.
+           </pre>
+           <h2>Sigla siteului (utilizata in format png):</h2>
+           <img src="../static/assets/rat.png" alt="sigla" class="center">
+            <h2 id="pages">Paginile site-ului:</h2>
+                <h3 id="login-front">1.Login Page</h3>
+                <ul>
+                    <li>
+                        <img src="login.png" alt="totlu" class="center">
+                    </li>
+                    <li>
+                        <h4>-Doua butoane:</h4>
+                        <ul>
+                           <li>-“Log in”, care permite logarea utilizatorului si trimiterea utilizatorului la pagina curselor.</li> 
+                           <li>-“Sing Up”, care trimite utilizatorul la pagina de inregistrare.</li>
+                        </ul>
+                    </li>
+               </ul>   
+
+               <h3 id="sign-up">2. Sign-Up Page</h3>
+                <ul>
+                    <li>
+                        <img src="Sign-Up.png" alt="totlu" class="center">
+                    </li>
+                    <li>
+                        <h4>-Trei campuri:</h4>
+                        <ul>
+                           <li>-"Username", trebuie sa fie un username nefolosit pentru a se putea crea contul.</li> 
+                           <li>-“Password”, parola utiizatorul.</li>
+                           <li>-"Confirm Password"</li>
+                        </ul>
+                        <h4>-Doua butoane:</h4>
+                        <ul>
+                           <li>-“Submit”, pentru a se crea contul cu datele introduse.</li> 
+                           <li>-“Login”, care trimite utilizatorul la pagina de logare.</li>
+                        </ul>
+                    </li>
+               </ul>
+    
+                <h3 id="main">3. Main page</h3>
+                <p >
+                    Aceasta reprezinta pagina pe care userul, odata logat, poate sa vada lista cu cursele ce vor avea loc in ziua curenta.
+                    Detaliile pastrate de o cursa sunt: numele, ora la care incepe cursa, numarul de sobolani ce vor participa la cursa.
+                </p>
+                <img src="Races.png" alt="cod11" class="center">
+                <p>
+                    Odata apasat butonul "Pariaza", se va deschide pagina de Betting, unde vom putea alege sobolanul pe care sa pariem.
+                </p>
+                
+                <h3 id="betting">4. Betting Page</h3>
+                <p>Pe aceasta pagina, utilizatorul poate sa aleaga unul din cei 6 sobolani care participa la cursa.</p>
+                <p>Poate sa introduca suma de bani pe care sa o parieze.</p>
+                <img src="Betting.png" alt="cod4" class="center">
+
+                <h3 id="profile">5.Profile Page</h3>
+                <p>Pe aceasta pagina se pot evidentia datele utilizatorului cat si cursele la care utilizatorul a pariat in trecut.</p>
+                <p>Aici sunt prezente si butoanele "Save Json", "Save HTML", "Save CSV"</p>
+                <img src="Profile.png" alt="cod6" class="center">                
+
+                <h3 id="shobo-list">6.Pagina cu Sobolanii</h3>
+                <p>Din aceasta pagina se poate vedea fiecare sobolan fiind afisate datele sale(nume, curse jucate, curse castigate).</p>
+                <p>Odata apasat pe butonul "Vezi detalii" se va intra pe profilul sobolanului respectiv.</p>
+                <img src="shobo-list.png" alt="cod7" class="center">
+                <br>
+                <br>
+                <img src="shobo-profile.png" alt="cod8" class="center">
+
+        <h2 id="#header">Headerul:</h2>
+            <p>Odata ce userul este logat:</p>
+            <p>Headerul va contine in partea stanga iconita site-ului, care odata apasata ne va duce mereu la pagina cu curse.</p>
+            <p>Iar in partea dreapta butoanele Profil(pagina profilului), Sobolan(lista cu toti sobolanii), Log Out(delogare) si Save calendar(iCalendar)</p>
+            <img src="Header.png" alt="cod12" class="center">
+            
+
+            <h2 id="doc-back">Back-endul</h2>
+            <h2>Login si Sign-Up</h2>
+            <pre>
+                Se efectueaza unul dintre aceste requesturi(Login sau Sign-Up), se creeaza un JWT unde se va tine minte un token pentru a mentine userul autentificat pana la delogare.
+           </pre>
+           
+           <h2>Baza de Date</h2>
+           <pre>
+               Folosim MongoDB pentru a pastra datele despre sobolani, curse, utilizatori si pariurile.
+           </pre>
+</section>
+</body>

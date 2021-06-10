@@ -46,11 +46,12 @@ function chooseRat(el) {
 
 function bet() {
     fetch(`/addBet?raceName=${localStorage.getItem("nume_cursa")}&ratName=${localStorage.getItem("shoboBet")}&betSize=${parseInt(document.getElementById("suma").value)}`, {
-        method : "POST",
+        method: "POST",
         headers: {
-            "X-Auth-Token" : getToken(document.cookie)
-        }        
-    })
-
-    window.location="http://localhost:5000/races.html"
+            "X-Auth-Token": getToken(document.cookie)
+        }
+    }).then(response => response.json()).then(json => {
+        if (json !== "Nu aveti destule fonduri") {
+            window.location="http://localhost:5000/races.html"
+        }})
 }

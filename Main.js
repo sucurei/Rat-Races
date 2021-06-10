@@ -54,6 +54,13 @@ app.post('/signup', (req,res) => {
             return
         }
 
+        if (extractedParams["password"] !== extractedParams["cpassword"])
+        {
+            res.writeHead(200, JSONheader)
+            res.end("Parola nu se potriveste")
+            return
+        }
+
         const user = new User({ name: extractedParams["name"], password: extractedParams["password"], email: extractedParams["email"], balanta : 1000 });
         user.save(function (err, fluffy) {
             if (err){
@@ -255,6 +262,11 @@ app.post('/addBet', async (req, res) => {
     let authTokenPayload = JWTHelper.GetAuthTokenPayload(req)
 
     let user = (await User.find({ name : authTokenPayload["name"] }).lean().exec())[0]
+
+    if (user["balanta"] < extractedParams.qsParams["betSize"]) {
+        res.end("Nu aveti destule fonduri")
+        return
+    }
 
     let newBet = new Bet({ userId : user["_id"], raceName : extractedParams.qsParams["raceName"], ratName : extractedParams.qsParams["ratName"], betSize : extractedParams.qsParams["betSize"] })
 

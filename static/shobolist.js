@@ -37,7 +37,7 @@ function update_races(races){
                     wins = ${wins}
                 </div>
                 <button type="button" class="btn" onclick='gotoshobo("${name}")'>
-                    pariaza
+                    Vezi Detalii
                 </button>
             </div>
     
